@@ -1,54 +1,44 @@
-<script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-// VAŽNO: Provjeri u folderu 'services' zove li se fajl 'tmdb.ts' ili 'api.ts' 
-// Ako je 'api.ts', promijeni putanju ispod u '../services/api'
-import { getPopularMovies } from '../services/tmdb'; 
-import MovieCard from '../components/MovieCard.vue';
+<script setup>
+import {ref, onMounted, computed} from 'vue';
+import {movieService} from '../services/api'; // alat koji je osoba 1 napravila
+import MovieCard from '../components/MovieCard.vue'; // kalup za karticu
 
-const movies = ref([]);
-const searchQuery = ref('');
+const  movies = ref([]); // ovde se spremaju svi filmovi sa interneta
+const search = ref('') // ovde se sprema sve ono sto se tipka u search bar
 
-// 1. Dohvaćanje podataka (Bodovi za HTTP)
-onMounted(async () => {
-  try {
-    const data = await getPopularMovies();
-    movies.value = data;
-  } catch (error) {
-    console.error("Greška pri dohvaćanju filmova:", error);
-  }
+//Pokreće se čim se stranica učita
+onMounted(async () =>{
+    //zovemo api i spremamo nase filomove u listu
+    movies.value = await movieService.getPopular();
 });
 
-// 2. Logika pretrage (Bodovi za Computed)
-const filteredMovies = computed(() => {
-  return movies.value.filter(movie => 
-    movie.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+// pametna lista koja prati pretragu
+const filteredMovies = computed(()=> {
+    //uzme sve filmove i zadrzi samo one ciji naslov sadrzi slova iz search-a
+    return movies.value.filter(film => 
+        film.title.toLowerCase().includes(search.value.toLowerCase())
+    );
 });
 </script>
 
 <template>
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6 text-center text-white">Popularni Filmovi</h1>
+    <div class="p-8 bg-gray-950 min-h-screen text-white">
+        <h1 class="text-3xl font-bold mb-8 text-center text-red-600">FILMOVI</h1>
 
-    <div class="flex justify-center mb-10">
-      <input 
-        v-model="searchQuery" 
-        type="text" 
-        placeholder="Pretraži filmove po naslovu..." 
-        class="w-full max-w-md p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
-      />
-    </div>
+        <div class="flex justify-center mb-8">
+            <input 
+                v-model="search" 
+                placeholder="Pretraži..." 
+                class="p-3 rounded bg-gray-800 w-full max-w-md border border-gray-700 focus:ring-2 focus:ring-red-500 outline-none"
+            />
+        </div>
 
-    <div v-if="filteredMovies.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-      <MovieCard 
-        v-for="film in filteredMovies" 
-        :key="film.id" 
-        :movie="film" 
-      />
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <MovieCard
+                v-for="film in filteredMovies"
+                :key="film.id"
+                :movie="film"
+            />
+        </div>
     </div>
-
-    <div v-else class="text-center text-gray-400 mt-10 text-xl">
-      Nije pronađen nijedan film s tim nazivom.
-    </div>
-  </div>
 </template>
