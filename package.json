@@ -13,12 +13,17 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "apply": "^0.2.19",
+    "axios": "^1.13.5",
+    "tailwind": "^2.3.1",
     "vue": "^3.5.27",
     "vue-router": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@vitejs/plugin-vue": "^6.0.3",
+    "autoprefixer": "^10.4.27",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-oxlint": "~1.42.0",
@@ -26,7 +31,9 @@
     "globals": "^17.3.0",
     "npm-run-all2": "^8.0.4",
     "oxlint": "~1.42.0",
+    "postcss": "^8.5.6",
     "prettier": "3.8.1",
+    "tailwindcss": "^4.2.1",
     "vite": "^7.3.1",
     "vite-plugin-vue-devtools": "^8.0.5"
   },
