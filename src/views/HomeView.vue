@@ -1,44 +1,75 @@
 <script setup>
-import {ref, onMounted, computed} from 'vue';
-import {movieService} from '../services/api'; // alat koji je osoba 1 napravila
-import MovieCard from '../components/MovieCard.vue'; // kalup za karticu
+import { ref, onMounted, computed } from 'vue';
+import { movieService } from '../services/api';
+import MovieCard from '../components/MovieCard.vue';
 
-const  movies = ref([]); // ovde se spremaju svi filmovi sa interneta
-const search = ref('') // ovde se sprema sve ono sto se tipka u search bar
+const movies = ref([]); 
+const search = ref('');
 
-//Pokreće se čim se stranica učita
-onMounted(async () =>{
-    //zovemo api i spremamo nase filomove u listu
+// Dohvaćanje podataka pri učitavanju
+onMounted(async () => {
+  try {
     movies.value = await movieService.getPopular();
+  } catch (error) {
+    console.error("Greška pri dohvaćanju filmova:", error);
+  }
 });
 
-// pametna lista koja prati pretragu
-const filteredMovies = computed(()=> {
-    //uzme sve filmove i zadrzi samo one ciji naslov sadrzi slova iz search-a
-    return movies.value.filter(film => 
-        film.title.toLowerCase().includes(search.value.toLowerCase())
-    );
+// Filtriranje filmova na temelju unosa
+const filteredMovies = computed(() => {
+  return movies.value.filter(film => 
+    film.title.toLowerCase().includes(search.value.toLowerCase())
+  );
 });
+
+// Funkcija za navigaciju (možeš je kasnije povezati s Vue Routerom)
+const goToDetails = (id) => {
+  console.log("Navigacija na film ID:", id);
+};
 </script>
 
 <template>
-    <div class="p-8 bg-gray-950 min-h-screen text-white">
-        <h1 class="text-3xl font-bold mb-8 text-center text-red-600">FILMOVI</h1>
+  <main class="max-w-7xl mx-auto px-6 py-12">
+    <header class="flex flex-col items-center mb-12 space-y-6">
+      <h1 class="text-5xl font-black tracking-tighter text-white uppercase italic">
+        Film<span class="text-red-600">Sfera</span>
+      </h1>
+      
+      <div class="relative w-full max-w-xl group">
+        <span class="absolute inset-y-0 left-4 flex items-center text-gray-400 group-focus-within:text-red-500 transition-colors">
+          🔍
+        </span>
+        <input 
+          v-model="search" 
+          type="text"
+          placeholder="Pretraži naslove filmova..." 
+          class="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-900 border border-gray-800 text-white placeholder-gray-500 focus:ring-2 focus:ring-red-600 focus:border-transparent outline-none transition-all shadow-2xl"
+        />
+      </div>
+    </header>
 
-        <div class="flex justify-center mb-8">
-            <input 
-                v-model="search" 
-                placeholder="Pretraži..." 
-                class="p-3 rounded bg-gray-800 w-full max-w-md border border-gray-700 focus:ring-2 focus:ring-red-500 outline-none"
-            />
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <MovieCard
-                v-for="film in filteredMovies"
-                :key="film.id"
-                :movie="film"
-            />
-        </div>
+    <div 
+      v-if="filteredMovies.length > 0"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+    >
+      <MovieCard
+        v-for="film in filteredMovies"
+        :key="film.id"
+        :movie="film"
+        @view-details="goToDetails"
+      />
     </div>
+
+    <div v-else class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="text-6xl mb-4">🎬</div>
+      <h2 class="text-2xl font-bold text-white">Nema rezultata za "{{ search }}"</h2>
+      <p class="text-gray-500 mt-2">Pokušajte upisati neki drugi pojam.</p>
+      <button 
+        @click="search = ''" 
+        class="mt-6 px-6 py-2 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Prikaži sve filmove
+      </button>
+    </div>
+  </main>
 </template>
