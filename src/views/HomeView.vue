@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { movieService } from '../services/api';
 import MovieCard from '../components/MovieCard.vue';
+import Footer from '../components/footer.vue';
 
 const movies = ref([]); 
 const search = ref('');
@@ -71,5 +72,7 @@ const goToDetails = (id) => {
         Prikaži sve filmove
       </button>
     </div>
+
+    <Footer />
   </main>
 </template>
