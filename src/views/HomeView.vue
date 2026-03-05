@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { movieService } from '../services/api';
+import { useRouter } from 'vue-router'; // 1. Uvezi router
+import { movieService } from '../services/api'; // Provjeri zove li se api ili movieService.js
 import MovieCard from '../components/MovieCard.vue';
 
+const router = useRouter(); // 2. Inicijaliziraj router
 const movies = ref([]); 
 const search = ref('');
 
-// Dohvaćanje podataka pri učitavanju
 onMounted(async () => {
   try {
     movies.value = await movieService.getPopular();
@@ -15,16 +16,19 @@ onMounted(async () => {
   }
 });
 
-// Filtriranje filmova na temelju unosa
 const filteredMovies = computed(() => {
   return movies.value.filter(film => 
     film.title.toLowerCase().includes(search.value.toLowerCase())
   );
 });
 
-// Funkcija za navigaciju (možeš je kasnije povezati s Vue Routerom)
+// 3. Popravi funkciju za navigaciju
 const goToDetails = (id) => {
-  console.log("Navigacija na film ID:", id);
+  // Promijeni ime da točno odgovara onome u routeru (movieDetails)
+  router.push({ 
+    name: 'movieDetails', 
+    params: { id: id } 
+  });
 };
 </script>
 

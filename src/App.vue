@@ -1,17 +1,17 @@
 <script setup>
-import HomeView from './views/HomeView.vue';
+// Makni import HomeView, router će se pobrinuti za to
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-950 text-gray-100 antialiased">
-    <HomeView />
+    <router-view />
   </div>
 </template>
 
 <style>
-/* Globalni stilovi ako su potrebni, inače Tailwind rješava sve */
 body {
   margin: 0;
   padding: 0;
+  background-color: #030712; /* bg-gray-950 */
 }
 </style>
