@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router'; // 1. Uvezi router
-import { movieService } from '../services/api'; // Provjeri zove li se api ili movieService.js
+import { useRouter } from 'vue-router';
+import { movieService } from '../services/api'; 
 import MovieCard from '../components/MovieCard.vue';
 import Footer from '../components/footer.vue';
+import Navbar from '../components/Navbar.vue'; // 1. Uvezi Navbar
 
-const router = useRouter(); // 2. Inicijaliziraj router
+const router = useRouter();
 const movies = ref([]); 
 const search = ref('');
 
@@ -23,9 +24,7 @@ const filteredMovies = computed(() => {
   );
 });
 
-// 3. Popravi funkciju za navigaciju
 const goToDetails = (id) => {
-  // Promijeni ime da točno odgovara onome u routeru (movieDetails)
   router.push({ 
     name: 'movieDetails', 
     params: { id: id } 
@@ -34,6 +33,7 @@ const goToDetails = (id) => {
 </script>
 
 <template>
+
   <main class="max-w-7xl mx-auto px-6 py-12">
     <header class="flex flex-col items-center mb-12 space-y-6">
       <h1 class="text-5xl font-black tracking-tighter text-white uppercase italic">
@@ -77,6 +77,5 @@ const goToDetails = (id) => {
       </button>
     </div>
 
-    <Footer />
   </main>
 </template>
