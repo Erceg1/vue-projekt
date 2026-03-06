@@ -12,19 +12,19 @@ const api = axios.create({
 });
 
 export const movieService = {
-  // Osoba 2 koristi ovo za Home Page
+
   getPopular: async () => {
     const res = await api.get('/movie/popular');
-    return res.data.results; // Vraća samo listu filmova
+    return res.data.results; 
   },
   
-  // Osoba 2 koristi ovo za Search
+  
   searchMovies: async (query) => {
     const res = await api.get('/search/movie', { params: { query } });
     return res.data.results;
   },
 
-  // Osoba 3 koristi ovo za Details Page
+  
   getDetails: async (id) => {
     const res = await api.get(`/movie/${id}`);
     return res.data;
