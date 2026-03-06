@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router'; // 1. Uvezi router
 import { movieService } from '../services/api'; // Provjeri zove li se api ili movieService.js
 import MovieCard from '../components/MovieCard.vue';
+import Footer from '../components/footer.vue';
 
 const router = useRouter(); // 2. Inicijaliziraj router
 const movies = ref([]); 
@@ -75,5 +76,7 @@ const goToDetails = (id) => {
         Prikaži sve filmove
       </button>
     </div>
+
+    <Footer />
   </main>
 </template>
